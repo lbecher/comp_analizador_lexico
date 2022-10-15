@@ -5,19 +5,20 @@ use tokenizadores as tkz;
 use nao_tokenizadores as ntkz;
 
 fn main() {
-    let entrada: Vec<u8> = b"// comentario de linha
+    let entrada: Vec<u8> =
+b"#DATA:
+    UINT32: x, y, zS;
+#DATA;
 
-    // c
+#MAIN:
+    SET: x, AND(x, y);
+    BLOC: OPERACAO;
+#MAIN;
 
-    ---
-    Comentario de bloco
-    ---
-
-    'd'
-
-    
-    \0".to_vec();
-
+#OPERACAO:
+    SET: zS, MUL(x, y);
+#OPERACAO;
+".to_vec();
 
     laco(entrada);
 }
@@ -40,7 +41,7 @@ fn laco(mut entrada: Vec<u8>) {
                 },
         
                 Err(_erro) => {
-                    //println!("Prosseguindo para próxima análize...\n");
+                    //println!("{}", _erro);
                 },
             };
         }
@@ -54,7 +55,7 @@ fn laco(mut entrada: Vec<u8>) {
                 },
         
                 Err(_erro) => {
-                    //println!("Prosseguindo para próxima análize...\n");
+                    //println!("{}", _erro);
                 },
             };
         }
@@ -68,14 +69,28 @@ fn laco(mut entrada: Vec<u8>) {
                 },
         
                 Err(_erro) => {
-                    //println!("Prosseguindo para próxima análize...\n");
+
                 },
             };
         }
 
         // ******************************************************
         // geração de tokens
-        /*if proxima_analize {
+        if proxima_analize {
+            match tkz::numero(&entrada) {
+                Ok(resultado) => {
+                    entrada.drain(0..resultado.0);
+                    println!("Novo token: {}", resultado.1);
+                    proxima_analize = false;
+                }
+
+                Err(_erro) => {
+
+                }
+            }
+        }
+
+        if proxima_analize {
             match tkz::string(&entrada) {
                 Ok(resultado) => {
                     entrada.drain(0..resultado.0);
@@ -87,7 +102,7 @@ fn laco(mut entrada: Vec<u8>) {
 
                 }
             }
-        }*/
+        }
 
         if proxima_analize {
             match tkz::caractere(&entrada) {
@@ -98,6 +113,189 @@ fn laco(mut entrada: Vec<u8>) {
                 }
 
                 Err(_erro) => {
+
+                }
+            }
+        }
+
+        if proxima_analize {
+            match tkz::bloc(&entrada) {
+                Ok(resultado) => {
+                    entrada.drain(0..resultado.0);
+                    println!("Novo token: {}", resultado.1);
+                    proxima_analize = false;
+                }
+
+                Err(_erro) => {
+
+                }
+            }
+        }
+
+        if proxima_analize {
+            match tkz::set(&entrada) {
+                Ok(resultado) => {
+                    entrada.drain(0..resultado.0);
+                    println!("Novo token: {}", resultado.1);
+                    proxima_analize = false;
+                }
+
+                Err(_erro) => {
+
+                }
+            }
+        }
+
+        if proxima_analize {
+            match tkz::operador(&entrada) {
+                Ok(resultado) => {
+                    entrada.drain(0..resultado.0);
+                    println!("Novo token: {}", resultado.1);
+                    proxima_analize = false;
+                }
+
+                Err(_erro) => {
+
+                }
+            }
+        }
+
+        if proxima_analize {
+            match tkz::tipo_de_variavel(&entrada) {
+                Ok(resultado) => {
+                    entrada.drain(0..resultado.0);
+                    println!("Novo token: {}", resultado.1);
+                    proxima_analize = false;
+                }
+
+                Err(_erro) => {
+
+                }
+            }
+        }
+
+        if proxima_analize {
+            match tkz::id_de_variavel(&entrada) {
+                Ok(resultado) => {
+                    entrada.drain(0..resultado.0);
+                    println!("Novo token: {}", resultado.1);
+                    proxima_analize = false;
+                }
+
+                Err(_erro) => {
+
+                }
+            }
+        }
+
+        if proxima_analize {
+            match tkz::id_de_bloco(&entrada) {
+                Ok(resultado) => {
+                    entrada.drain(0..resultado.0);
+                    println!("Novo token: {}", resultado.1);
+                    proxima_analize = false;
+                }
+
+                Err(_erro) => {
+
+                }
+            }
+        }
+
+        if proxima_analize {
+            match tkz::abre_bloco(&entrada) {
+                Ok(resultado) => {
+                    entrada.drain(0..resultado.0);
+                    println!("Novo token: {}", resultado.1);
+                    proxima_analize = false;
+                }
+
+                Err(_erro) => {
+
+                }
+            }
+        }
+
+        if proxima_analize {
+            match tkz::fecha_bloco(&entrada) {
+                Ok(resultado) => {
+                    entrada.drain(0..resultado.0);
+                    println!("Novo token: {}", resultado.1);
+                    proxima_analize = false;
+                }
+
+                Err(_erro) => {
+
+                }
+            }
+        }
+
+        if proxima_analize {
+            match tkz::virgula(&entrada) {
+                Ok(resultado) => {
+                    entrada.drain(0..resultado.0);
+                    println!("Novo token: {}", resultado.1);
+                    proxima_analize = false;
+                }
+
+                Err(_erro) => {
+
+                }
+            }
+        }
+
+        if proxima_analize {
+            match tkz::ponto_e_virgula(&entrada) {
+                Ok(resultado) => {
+                    entrada.drain(0..resultado.0);
+                    println!("Novo token: {}", resultado.1);
+                    proxima_analize = false;
+                }
+
+                Err(_erro) => {
+
+                }
+            }
+        }
+
+        if proxima_analize {
+            match tkz::abre_parenteses(&entrada) {
+                Ok(resultado) => {
+                    entrada.drain(0..resultado.0);
+                    println!("Novo token: {}", resultado.1);
+                    proxima_analize = false;
+                }
+
+                Err(_erro) => {
+
+                }
+            }
+        }
+
+        if proxima_analize {
+            match tkz::fecha_parenteses(&entrada) {
+                Ok(resultado) => {
+                    entrada.drain(0..resultado.0);
+                    println!("Novo token: {}", resultado.1);
+                    proxima_analize = false;
+                }
+
+                Err(_erro) => {
+
+                }
+            }
+        }
+
+        if proxima_analize {
+            match tkz::dois_pontos(&entrada) {
+                Ok(resultado) => {
+                    entrada.drain(0..resultado.0);
+                    println!("Novo token: {}", resultado.1);
+                    proxima_analize = false;
+                }
+
+                Err(_erro) => {
+
                 }
             }
         }

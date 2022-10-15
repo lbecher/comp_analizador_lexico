@@ -1,14 +1,39 @@
 use std::str::FromStr;
+
 use pom::parser::*;
 
-pub fn string(entrada: &[u8]) -> Result<(usize, String), String> {
+pub fn numero(entrada: &[u8]) -> Result<(usize, String), String> {
+    let simbolos = b"1234567890";
+
     let analizador =
-        sym(b'"') + (
-            one_of(b"qwertyuiopasdfghjklzxcvbnm") | 
-            one_of(b"QWERTYUIOPASDFGHJKLZXCVBNM") | 
-            one_of(b"1234567890") |
-            one_of(b" \0\n")
-        ).repeat(0..) + 
+        (sym(b'+') | sym(b'-') | one_of(simbolos.as_ref())) +
+        one_of(simbolos.as_ref()).repeat(0..);
+
+    match analizador.parse(entrada) {
+        Ok(saida) => {
+            let mut resultado: Vec<u8> = Vec::new();
+
+            resultado.push(saida.0);
+
+            for caractere in saida.1 {
+                resultado.push(caractere);
+            }
+
+            return Ok((resultado.len(), format!("[numero, {}]", String::from_utf8(resultado).unwrap())));
+        },
+
+        Err(erro) => {
+            return Err(format!("{:?}", erro));
+        },
+    };
+}
+
+pub fn string(entrada: &[u8]) -> Result<(usize, String), String> {
+    let simbolos = b"\n\t\0 1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
+
+    let analizador =
+        sym(b'"') +
+        one_of(simbolos.as_ref()).repeat(0..) +
         sym(b'"');
 
     match analizador.parse(entrada) {
@@ -18,7 +43,7 @@ pub fn string(entrada: &[u8]) -> Result<(usize, String), String> {
             resultado.push(saida.0.0);
 
             for caractere in saida.0.1 {
-                resultado.push(caractere.into());
+                resultado.push(caractere);
             }
 
             resultado.push(saida.1);
@@ -26,21 +51,18 @@ pub fn string(entrada: &[u8]) -> Result<(usize, String), String> {
             return Ok((resultado.len(), format!("[string, {}]", String::from_utf8(resultado).unwrap())));
         },
 
-        Err(_e) => {
-            println!("Erro: {:?}", _e);
-            return Err(String::from_str("Há um símbolo inválido na string!").unwrap());
+        Err(erro) => {
+            return Err(format!("{:?}", erro));
         },
     };
 }
 
 pub fn caractere(entrada: &[u8]) -> Result<(usize, String), String> {
+    let simbolos = b"\n\t\0 1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
+
     let analizador =
-        sym(b'\'') + (
-            one_of(b"qwertyuiopasdfghjklzxcvbnm") | 
-            one_of(b"QWERTYUIOPASDFGHJKLZXCVBNM") | 
-            one_of(b"1234567890") |
-            sym(b' ')
-        ) + 
+        sym(b'\'') +
+        one_of(simbolos.as_ref()) +
         sym(b'\'');
 
     match analizador.parse(entrada) {
@@ -54,10 +76,289 @@ pub fn caractere(entrada: &[u8]) -> Result<(usize, String), String> {
             return Ok((resultado.len(), format!("[caractere, {}]", String::from_utf8(resultado).unwrap())));
         },
 
-        Err(_e) => {
-            //println!("Erro: {:?}", e);
-            return Err(String::from_str("Há um símbolo inválido na string!").unwrap());
+        Err(erro) => {
+            return Err(format!("{:?}", erro));
         },
     };
 }
 
+pub fn bloc(entrada: &[u8]) -> Result<(usize, String), String> {
+    let analizador =
+        seq(b"BLOC");
+
+    match analizador.parse(entrada) {
+        Ok(saida) => {
+            let mut resultado: Vec<u8> = Vec::new();
+
+            for caractere in saida {
+                resultado.push(*caractere);
+            }
+
+            return Ok((resultado.len(), String::from_str("[bloc, ]").unwrap()));
+        },
+
+        Err(erro) => {
+            return Err(format!("{:?}", erro));
+        },
+    };
+}
+
+pub fn set(entrada: &[u8]) -> Result<(usize, String), String> {
+    let analizador =
+        seq(b"SET");
+
+    match analizador.parse(entrada) {
+        Ok(saida) => {
+            let mut resultado: Vec<u8> = Vec::new();
+
+            for caractere in saida {
+                resultado.push(*caractere);
+            }
+
+            return Ok((resultado.len(), String::from_str("[set, ]").unwrap()));
+        },
+
+        Err(erro) => {
+            return Err(format!("{:?}", erro));
+        },
+    };
+}
+
+pub fn operador(entrada: &[u8]) -> Result<(usize, String), String> {
+    let analizador =
+        seq(b"NOT") | seq(b"AND") | seq(b"OR") | seq(b"ADD") |
+        seq(b"SUB") | seq(b"MUL") | seq(b"DIV") | seq(b"DIVR") |
+        seq(b"A") | seq(b"E") | seq(b"B") | seq(b"BE") | seq(b"AE");
+
+    match analizador.parse(entrada) {
+        Ok(saida) => {
+            let mut resultado: Vec<u8> = Vec::new();
+
+            for caractere in saida {
+                resultado.push(*caractere);
+            }
+
+            return Ok((resultado.len(), format!("[operador, {}]", String::from_utf8(resultado).unwrap())));
+        },
+
+        Err(erro) => {
+            return Err(format!("{:?}", erro));
+        },
+    };
+}
+
+pub fn tipo_de_variavel(entrada: &[u8]) -> Result<(usize, String), String> {
+    let analizador =
+        seq(b"CHR") | seq(b"STR") |
+        seq(b"INT8") | seq(b"INT16") | seq(b"INT32") | seq(b"INT64") |
+        seq(b"UINT8") | seq(b"UINT16") | seq(b"UINT32") | seq(b"UINT64");
+
+    match analizador.parse(entrada) {
+        Ok(saida) => {
+            let mut resultado: Vec<u8> = Vec::new();
+
+            for caractere in saida {
+                resultado.push(*caractere);
+            }
+
+            return Ok((resultado.len(), format!("[tipo_de_variavel, {}]", String::from_utf8(resultado).unwrap())));
+        },
+
+        Err(erro) => {
+            return Err(format!("{:?}", erro));
+        },
+    };
+}
+
+pub fn id_de_variavel(entrada: &[u8]) -> Result<(usize, String), String> {
+    let simbolos_de_inicio = b"qwertyuiopasdfghjklzxcvbnm";
+    let simbolos = b"_1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
+
+    let analizador =
+        one_of(simbolos_de_inicio.as_ref()) +
+        one_of(simbolos.as_ref()).repeat(0..);
+
+    match analizador.parse(entrada) {
+        Ok(saida) => {
+            let mut resultado: Vec<u8> = Vec::new();
+
+            resultado.push(saida.0);
+            
+            for caractere in saida.1 {
+                resultado.push(caractere);
+            }
+
+            return Ok((resultado.len(), format!("[id_de_variavel, {}]", String::from_utf8(resultado).unwrap())));
+        },
+
+        Err(erro) => {
+            return Err(format!("{:?}", erro));
+        },
+    };
+}
+
+pub fn id_de_bloco(entrada: &[u8]) -> Result<(usize, String), String> {
+    let simbolos_de_inicio = b"QWERTYUIOPASDFGHJKLZXCVBNM";
+    let simbolos = b"_1234567890QWERTYUIOPASDFGHJKLZXCVBNM";
+
+    let analizador =
+        one_of(simbolos_de_inicio.as_ref()) +
+        one_of(simbolos.as_ref()).repeat(0..);
+
+    match analizador.parse(entrada) {
+        Ok(saida) => {
+            let mut resultado: Vec<u8> = Vec::new();
+
+            resultado.push(saida.0);
+            
+            for caractere in saida.1 {
+                resultado.push(caractere);
+            }
+
+            return Ok((resultado.len(), format!("[id_de_bloco, {}]", String::from_utf8(resultado).unwrap())));
+        },
+
+        Err(erro) => {
+            return Err(format!("{:?}", erro));
+        },
+    };
+}
+
+pub fn abre_bloco(entrada: &[u8]) -> Result<(usize, String), String> {
+    let simbolos_de_inicio = b"QWERTYUIOPASDFGHJKLZXCVBNM";
+    let simbolos = b"_1234567890QWERTYUIOPASDFGHJKLZXCVBNM";
+
+    let analizador =
+        sym(b'#') +
+        one_of(simbolos_de_inicio.as_ref()) +
+        one_of(simbolos.as_ref()).repeat(0..) +
+        sym(b':');
+
+    match analizador.parse(entrada) {
+        Ok(saida) => {
+            let mut resultado: Vec<u8> = Vec::new();
+
+            resultado.push(saida.0.0.0);
+            resultado.push(saida.0.0.1);
+            
+            for caractere in saida.0.1 {
+                resultado.push(caractere);
+            }
+
+            resultado.push(saida.1);
+
+            return Ok((resultado.len(), format!("[abre_bloco, {}]", String::from_utf8(resultado).unwrap())));
+        },
+
+        Err(erro) => {
+            return Err(format!("{:?}", erro));
+        },
+    };
+}
+
+pub fn fecha_bloco(entrada: &[u8]) -> Result<(usize, String), String> {
+    let simbolos_de_inicio = b"QWERTYUIOPASDFGHJKLZXCVBNM";
+    let simbolos = b"_1234567890QWERTYUIOPASDFGHJKLZXCVBNM";
+
+    let analizador =
+        sym(b'#') +
+        one_of(simbolos_de_inicio.as_ref()) +
+        one_of(simbolos.as_ref()).repeat(0..) +
+        sym(b';');
+
+    match analizador.parse(entrada) {
+        Ok(saida) => {
+            let mut resultado: Vec<u8> = Vec::new();
+
+            resultado.push(saida.0.0.0);
+            resultado.push(saida.0.0.1);
+            
+            for caractere in saida.0.1 {
+                resultado.push(caractere);
+            }
+
+            resultado.push(saida.1);
+
+            return Ok((resultado.len(), format!("[fecha_bloco, {}]", String::from_utf8(resultado).unwrap())));
+        },
+
+        Err(erro) => {
+            return Err(format!("{:?}", erro));
+        },
+    };
+}
+
+pub fn virgula(entrada: &[u8]) -> Result<(usize, String), String> {
+    let analizador =
+        sym(b',');
+
+    match analizador.parse(entrada) {
+        Ok(_saida) => {
+            return Ok((1, String::from_str("[virgula, ]").unwrap()));
+        },
+
+        Err(erro) => {
+            return Err(format!("{:?}", erro));
+        },
+    };
+}
+
+pub fn ponto_e_virgula(entrada: &[u8]) -> Result<(usize, String), String> {
+    let analizador =
+        sym(b';');
+
+    match analizador.parse(entrada) {
+        Ok(_saida) => {
+            return Ok((1, String::from_str("[ponto_e_virgula, ]").unwrap()));
+        },
+
+        Err(erro) => {
+            return Err(format!("{:?}", erro));
+        },
+    };
+}
+
+pub fn abre_parenteses(entrada: &[u8]) -> Result<(usize, String), String> {
+    let analizador =
+        sym(b'(');
+
+    match analizador.parse(entrada) {
+        Ok(_saida) => {
+            return Ok((1, String::from_str("[abre_parenteses, ]").unwrap()));
+        },
+
+        Err(erro) => {
+            return Err(format!("{:?}", erro));
+        },
+    };
+}
+
+pub fn fecha_parenteses(entrada: &[u8]) -> Result<(usize, String), String> {
+    let analizador =
+        sym(b')');
+
+    match analizador.parse(entrada) {
+        Ok(_saida) => {
+            return Ok((1, String::from_str("[fecha_parenteses, ]").unwrap()));
+        },
+
+        Err(erro) => {
+            return Err(format!("{:?}", erro));
+        },
+    };
+}
+
+pub fn dois_pontos(entrada: &[u8]) -> Result<(usize, String), String> {
+    let analizador =
+        sym(b':');
+
+    match analizador.parse(entrada) {
+        Ok(_saida) => {
+            return Ok((1, String::from_str("[dois_pontos, ]").unwrap()));
+        },
+
+        Err(erro) => {
+            return Err(format!("{:?}", erro));
+        },
+    };
+}
