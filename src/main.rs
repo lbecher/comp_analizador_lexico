@@ -16,7 +16,9 @@ b"#DATA:
 #MAIN;
 
 #OPERACAO:
-    SET: zS, MUL(x, y);
+    #WNZ: NOT(B(zS, 100)):
+        SET: zS, MUL(x, y);
+    #WNZ;
 #OPERACAO;
 ".to_vec();
 
@@ -25,7 +27,7 @@ b"#DATA:
 
 fn laco(mut entrada: Vec<u8>) {
     let mut continuar_laco: bool = true;
-    let mut proxima_analize: bool = true;
+    let mut proxima_analize: bool;
 
     while continuar_laco && entrada.len() > 1 {
         proxima_analize = true;
@@ -77,48 +79,6 @@ fn laco(mut entrada: Vec<u8>) {
         // ******************************************************
         // geração de tokens
         if proxima_analize {
-            match tkz::numero(&entrada) {
-                Ok(resultado) => {
-                    entrada.drain(0..resultado.0);
-                    println!("Novo token: {}", resultado.1);
-                    proxima_analize = false;
-                }
-
-                Err(_erro) => {
-
-                }
-            }
-        }
-
-        if proxima_analize {
-            match tkz::string(&entrada) {
-                Ok(resultado) => {
-                    entrada.drain(0..resultado.0);
-                    println!("Novo token: {}", resultado.1);
-                    proxima_analize = false;
-                }
-
-                Err(_erro) => {
-
-                }
-            }
-        }
-
-        if proxima_analize {
-            match tkz::caractere(&entrada) {
-                Ok(resultado) => {
-                    entrada.drain(0..resultado.0);
-                    println!("Novo token: {}", resultado.1);
-                    proxima_analize = false;
-                }
-
-                Err(_erro) => {
-
-                }
-            }
-        }
-
-        if proxima_analize {
             match tkz::bloc(&entrada) {
                 Ok(resultado) => {
                     entrada.drain(0..resultado.0);
@@ -161,6 +121,62 @@ fn laco(mut entrada: Vec<u8>) {
         }
 
         if proxima_analize {
+            match tkz::abre_bloco_condicional(&entrada) {
+                Ok(resultado) => {
+                    entrada.drain(0..resultado.0);
+                    println!("Novo token: {}", resultado.1);
+                    proxima_analize = false;
+                }
+
+                Err(_erro) => {
+
+                }
+            }
+        }
+
+        if proxima_analize {
+            match tkz::fecha_bloco_condicional(&entrada) {
+                Ok(resultado) => {
+                    entrada.drain(0..resultado.0);
+                    println!("Novo token: {}", resultado.1);
+                    proxima_analize = false;
+                }
+
+                Err(_erro) => {
+
+                }
+            }
+        }
+
+        if proxima_analize {
+            match tkz::abre_bloco_de_codigo(&entrada) {
+                Ok(resultado) => {
+                    entrada.drain(0..resultado.0);
+                    println!("Novo token: {}", resultado.1);
+                    proxima_analize = false;
+                }
+
+                Err(_erro) => {
+
+                }
+            }
+        }
+
+        if proxima_analize {
+            match tkz::fecha_bloco_de_codigo(&entrada) {
+                Ok(resultado) => {
+                    entrada.drain(0..resultado.0);
+                    println!("Novo token: {}", resultado.1);
+                    proxima_analize = false;
+                }
+
+                Err(_erro) => {
+
+                }
+            }
+        }
+
+        if proxima_analize {
             match tkz::tipo_de_variavel(&entrada) {
                 Ok(resultado) => {
                     entrada.drain(0..resultado.0);
@@ -190,34 +206,6 @@ fn laco(mut entrada: Vec<u8>) {
 
         if proxima_analize {
             match tkz::id_de_bloco(&entrada) {
-                Ok(resultado) => {
-                    entrada.drain(0..resultado.0);
-                    println!("Novo token: {}", resultado.1);
-                    proxima_analize = false;
-                }
-
-                Err(_erro) => {
-
-                }
-            }
-        }
-
-        if proxima_analize {
-            match tkz::abre_bloco(&entrada) {
-                Ok(resultado) => {
-                    entrada.drain(0..resultado.0);
-                    println!("Novo token: {}", resultado.1);
-                    proxima_analize = false;
-                }
-
-                Err(_erro) => {
-
-                }
-            }
-        }
-
-        if proxima_analize {
-            match tkz::fecha_bloco(&entrada) {
                 Ok(resultado) => {
                     entrada.drain(0..resultado.0);
                     println!("Novo token: {}", resultado.1);
@@ -300,6 +288,50 @@ fn laco(mut entrada: Vec<u8>) {
             }
         }
 
+        if proxima_analize {
+            match tkz::numero(&entrada) {
+                Ok(resultado) => {
+                    entrada.drain(0..resultado.0);
+                    println!("Novo token: {}", resultado.1);
+                    proxima_analize = false;
+                }
+
+                Err(_erro) => {
+
+                }
+            }
+        }
+
+        if proxima_analize {
+            match tkz::string(&entrada) {
+                Ok(resultado) => {
+                    entrada.drain(0..resultado.0);
+                    println!("Novo token: {}", resultado.1);
+                    proxima_analize = false;
+                }
+
+                Err(_erro) => {
+
+                }
+            }
+        }
+
+        if proxima_analize {
+            match tkz::caractere(&entrada) {
+                Ok(resultado) => {
+                    entrada.drain(0..resultado.0);
+                    println!("Novo token: {}", resultado.1);
+                    proxima_analize = false;
+                }
+
+                Err(_erro) => {
+
+                }
+            }
+        }
+
+        // se proxima_analize for verdadeiro nesse ponto
+        // significa que ocorreu um erro léxico
         continuar_laco = !proxima_analize;
     }
 
