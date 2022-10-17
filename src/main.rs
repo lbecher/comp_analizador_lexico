@@ -45,23 +45,22 @@ fn laco(mut entrada: Vec<u8>) {
         entrada.drain(0..resultado);
         println!("{} caractere(s) irrelevante(s) removido(s)!", resultado);
       },
-      Err(erro) => {
-        debug_println!("{}", erro);
+      Err(_erro) => {
+        debug_println!("{}", _erro);
         match ntkz::comentarios_de_linha(&entrada) {
           Ok(resultado) => {
             entrada.drain(0..resultado);
             println!("{} caracteres de comentário de linha removidos!", resultado);
           },
-          Err(erro) => {
-            debug_println!("{}", erro);
+          Err(_erro) => {
+            debug_println!("{}", _erro);
             match ntkz::comentarios_de_bloco(&entrada) {
               Ok(resultado) => {
                 entrada.drain(0..resultado);
                 println!("{} caracteres de comentário de bloco removidos!", resultado);
               },
-              Err(erro) => {
-                debug_println!("{}", erro);
-                println!("Caractere relevante encontrado!");
+              Err(_erro) => {
+                debug_println!("{}", _erro);
               },
             };
           },
@@ -76,161 +75,161 @@ fn laco(mut entrada: Vec<u8>) {
         tokens = format!("{}\n{}", tokens, resultado.1);
         println!("Novo token: {}", resultado.1);
       },
-      Err(erro) => {
-        debug_println!("{}", erro);
+      Err(_erro) => {
+        debug_println!("{}", _erro);
         match tkz::dois_pontos(&entrada) {
           Ok(resultado) => {
             entrada.drain(0..resultado.0);
             tokens = format!("{}\n{}", tokens, resultado.1);
             println!("Novo token: {}", resultado.1);
           },
-          Err(erro) => {
-            debug_println!("{}", erro);
+          Err(_erro) => {
+            debug_println!("{}", _erro);
             match tkz::ponto_e_virgula(&entrada) {
               Ok(resultado) => {
                 entrada.drain(0..resultado.0);
                 tokens = format!("{}\n{}", tokens, resultado.1);
                 println!("Novo token: {}", resultado.1);
               },
-              Err(erro) => {
-                debug_println!("{}", erro);
+              Err(_erro) => {
+                debug_println!("{}", _erro);
                 match tkz::abre_parenteses(&entrada) {
                   Ok(resultado) => {
                     entrada.drain(0..resultado.0);
                     tokens = format!("{}\n{}", tokens, resultado.1);
                     println!("Novo token: {}", resultado.1);
                   },
-                  Err(erro) => {
-                    debug_println!("{}", erro);
+                  Err(_erro) => {
+                    debug_println!("{}", _erro);
                     match tkz::fecha_parenteses(&entrada) {
                       Ok(resultado) => {
                         entrada.drain(0..resultado.0);
                         tokens = format!("{}\n{}", tokens, resultado.1);
                         println!("Novo token: {}", resultado.1);
                       },
-                      Err(erro) => {
-                        debug_println!("{}", erro);
+                      Err(_erro) => {
+                        debug_println!("{}", _erro);
                         match tkz::set(&entrada) {
                           Ok(resultado) => {
                             entrada.drain(0..resultado.0);
                             tokens = format!("{}\n{}", tokens, resultado.1);
                             println!("Novo token: {}", resultado.1);
                           },
-                          Err(erro) => {
-                            debug_println!("{}", erro);
+                          Err(_erro) => {
+                            debug_println!("{}", _erro);
                             match tkz::print(&entrada) {
                               Ok(resultado) => {
                                 entrada.drain(0..resultado.0);
                                 tokens = format!("{}\n{}", tokens, resultado.1);
                                 println!("Novo token: {}", resultado.1);
                               },
-                              Err(erro) => {
-                                debug_println!("{}", erro);
+                              Err(_erro) => {
+                                debug_println!("{}", _erro);
                                 match tkz::scan(&entrada) {
                                   Ok(resultado) => {
                                     entrada.drain(0..resultado.0);
                                     tokens = format!("{}\n{}", tokens, resultado.1);
                                     println!("Novo token: {}", resultado.1);
                                   },
-                                  Err(erro) => {
-                                    debug_println!("{}", erro);
+                                  Err(_erro) => {
+                                    debug_println!("{}", _erro);
                                     match tkz::bloc(&entrada) {
                                       Ok(resultado) => {
                                         entrada.drain(0..resultado.0);
                                         tokens = format!("{}\n{}", tokens, resultado.1);
                                         println!("Novo token: {}", resultado.1);
                                       },
-                                      Err(erro) => {
-                                        debug_println!("{}", erro);
+                                      Err(_erro) => {
+                                        debug_println!("{}", _erro);
                                         match tkz::operador(&entrada) {
                                           Ok(resultado) => {
                                             entrada.drain(0..resultado.0);
                                             tokens = format!("{}\n{}", tokens, resultado.1);
                                             println!("Novo token: {}", resultado.1);
                                           },
-                                          Err(erro) => {
-                                            debug_println!("{}", erro);
+                                          Err(_erro) => {
+                                            debug_println!("{}", _erro);
                                             match tkz::tipo_de_variavel(&entrada) {
                                               Ok(resultado) => {
                                                 entrada.drain(0..resultado.0);
                                                 tokens = format!("{}\n{}", tokens, resultado.1);
                                                 println!("Novo token: {}", resultado.1);
                                               },
-                                              Err(erro) => {
-                                                debug_println!("{}", erro);
+                                              Err(_erro) => {
+                                                debug_println!("{}", _erro);
                                                 match tkz::id_de_variavel(&entrada) {
                                                   Ok(resultado) => {
                                                     entrada.drain(0..resultado.0);
                                                     tokens = format!("{}\n{}", tokens, resultado.1);
                                                     println!("Novo token: {}", resultado.1);
                                                   },
-                                                  Err(erro) => {
-                                                    debug_println!("{}", erro);
+                                                  Err(_erro) => {
+                                                    debug_println!("{}", _erro);
                                                     match tkz::id_de_bloco(&entrada) {
                                                       Ok(resultado) => {
                                                         entrada.drain(0..resultado.0);
                                                         tokens = format!("{}\n{}", tokens, resultado.1);
                                                         println!("Novo token: {}", resultado.1);
                                                       },
-                                                      Err(erro) => {
-                                                        debug_println!("{}", erro);
+                                                      Err(_erro) => {
+                                                        debug_println!("{}", _erro);
                                                         match tkz::abre_bloco_condicional(&entrada) {
                                                           Ok(resultado) => {
                                                             entrada.drain(0..resultado.0);
                                                             tokens = format!("{}\n{}", tokens, resultado.1);
                                                             println!("Novo token: {}", resultado.1);
                                                           },
-                                                          Err(erro) => {
-                                                            debug_println!("{}", erro);
+                                                          Err(_erro) => {
+                                                            debug_println!("{}", _erro);
                                                             match tkz::fecha_bloco_condicional(&entrada) {
                                                               Ok(resultado) => {
                                                                 entrada.drain(0..resultado.0);
                                                                 tokens = format!("{}\n{}", tokens, resultado.1);
                                                                 println!("Novo token: {}", resultado.1);
                                                               },
-                                                              Err(erro) => {
-                                                                debug_println!("{}", erro);
+                                                              Err(_erro) => {
+                                                                debug_println!("{}", _erro);
                                                                 match tkz::abre_bloco_de_codigo(&entrada) {
                                                                   Ok(resultado) => {
                                                                     entrada.drain(0..resultado.0);
                                                                     tokens = format!("{}\n{}", tokens, resultado.1);
                                                                     println!("Novo token: {}", resultado.1);
                                                                   },
-                                                                  Err(erro) => {
-                                                                    debug_println!("{}", erro);
+                                                                  Err(_erro) => {
+                                                                    debug_println!("{}", _erro);
                                                                     match tkz::fecha_bloco_de_codigo(&entrada) {
                                                                       Ok(resultado) => {
                                                                         entrada.drain(0..resultado.0);
                                                                         tokens = format!("{}\n{}", tokens, resultado.1);
                                                                         println!("Novo token: {}", resultado.1);
                                                                       },
-                                                                      Err(erro) => {
-                                                                        debug_println!("{}", erro);
+                                                                      Err(_erro) => {
+                                                                        debug_println!("{}", _erro);
                                                                         match tkz::caractere(&entrada) {
                                                                           Ok(resultado) => {
                                                                             entrada.drain(0..resultado.0);
                                                                             tokens = format!("{}\n{}", tokens, resultado.1);
                                                                             println!("Novo token: {}", resultado.1);
                                                                           },
-                                                                          Err(erro) => {
-                                                                            debug_println!("{}", erro);
+                                                                          Err(_erro) => {
+                                                                            debug_println!("{}", _erro);
                                                                             match tkz::numero(&entrada) {
                                                                               Ok(resultado) => {
                                                                                 entrada.drain(0..resultado.0);
                                                                                 tokens = format!("{}\n{}", tokens, resultado.1);
                                                                                 println!("Novo token: {}", resultado.1);
                                                                               },
-                                                                              Err(erro) => {
-                                                                                debug_println!("{}", erro);
+                                                                              Err(_erro) => {
+                                                                                debug_println!("{}", _erro);
                                                                                 match tkz::string(&entrada) {
                                                                                   Ok(resultado) => {
                                                                                     entrada.drain(0..resultado.0);
                                                                                     tokens = format!("{}\n{}", tokens, resultado.1);
                                                                                     println!("Novo token: {}", resultado.1);
                                                                                   },
-                                                                                  Err(erro) => {
-                                                                                    debug_println!("{}", erro);
-                                                                                    println!("Símbolo desconhecido encontrado!");
+                                                                                  Err(_erro) => {
+                                                                                    debug_println!("{}", _erro);
+                                                                                    println!("ERRO: uma cadeia de símbolos que não pode ser reconhecida foi encontrada!");
                                                                                     erro_lexico = true;
                                                                                   },
                                                                                 };
