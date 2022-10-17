@@ -44,11 +44,54 @@ pub fn set(entrada: &[u8]) -> Result<(usize, String), String> {
     };
 }
 
+pub fn print(entrada: &[u8]) -> Result<(usize, String), String> {
+    let analizador =
+        seq(b"PRINT");
+
+    match analizador.parse(entrada) {
+        Ok(saida) => {
+            let mut resultado: Vec<u8> = Vec::new();
+
+            for caractere in saida {
+                resultado.push(*caractere);
+            }
+
+            return Ok((resultado.len(), String::from_str("[print, ]").unwrap()));
+        },
+
+        Err(erro) => {
+            return Err(format!("{:?}", erro));
+        },
+    };
+}
+
+pub fn scan(entrada: &[u8]) -> Result<(usize, String), String> {
+    let analizador =
+        seq(b"SCAN");
+
+    match analizador.parse(entrada) {
+        Ok(saida) => {
+            let mut resultado: Vec<u8> = Vec::new();
+
+            for caractere in saida {
+                resultado.push(*caractere);
+            }
+
+            return Ok((resultado.len(), String::from_str("[scan, ]").unwrap()));
+        },
+
+        Err(erro) => {
+            return Err(format!("{:?}", erro));
+        },
+    };
+}
+
 pub fn operador(entrada: &[u8]) -> Result<(usize, String), String> {
     let analizador =
-        seq(b"NOT") | seq(b"AND") | seq(b"OR") | seq(b"ADD") |
-        seq(b"SUB") | seq(b"MUL") | seq(b"DIV") | seq(b"DIVR") |
-        seq(b"A") | seq(b"E") | seq(b"B") | seq(b"BE") | seq(b"AE");
+        seq(b"DIVR") | seq(b"NOT") | seq(b"AND") | seq(b"ADD") |
+        seq(b"SUB") | seq(b"MUL") | seq(b"DIV") | seq(b"OR") |
+        seq(b"AE") | seq(b"BE") | seq(b"A") | seq(b"E") |
+        seq(b"B");
 
     match analizador.parse(entrada) {
         Ok(saida) => {

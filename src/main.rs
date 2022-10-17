@@ -1,3 +1,7 @@
+use std::env;
+use std::fs::File;
+use std::io::prelude::*;
+
 mod tokenizadores;
 mod nao_tokenizadores;
 
@@ -5,24 +9,17 @@ use tokenizadores as tkz;
 use nao_tokenizadores as ntkz;
 
 fn main() {
-    let entrada: Vec<u8> =
-b"#DATA:
-    UINT32: x, y, zS;
-#DATA;
+    // obtém argumentos do terminal
+    let argumentos: Vec<String> = env::args().collect();
 
-#MAIN:
-    SET: x, AND(x, y);
-    BLOC: OPERACAO;
-#MAIN;
+    // abre arquivo .lia
+    let mut arquivo = File::open(argumentos.get(1).unwrap())
+        .expect("Não foi possível abrir o arquivo!");
+    
+    let mut entrada: Vec<u8> = Vec::new();
+    arquivo.read_to_end(&mut entrada).expect("Deu ruim na leitura do arquivo!");
 
-#OPERACAO:
-    #WNZ: NOT(B(zS, 100)):
-        SET: zS, MUL(x, y);
-    #WNZ;
-#OPERACAO;
-".to_vec();
-
-    laco(entrada);
+    laco(entrada.to_vec());
 }
 
 fn laco(mut entrada: Vec<u8>) {
@@ -94,6 +91,34 @@ fn laco(mut entrada: Vec<u8>) {
 
         if proxima_analize {
             match tkz::set(&entrada) {
+                Ok(resultado) => {
+                    entrada.drain(0..resultado.0);
+                    println!("Novo token: {}", resultado.1);
+                    proxima_analize = false;
+                }
+
+                Err(_erro) => {
+
+                }
+            }
+        }
+
+        if proxima_analize {
+            match tkz::print(&entrada) {
+                Ok(resultado) => {
+                    entrada.drain(0..resultado.0);
+                    println!("Novo token: {}", resultado.1);
+                    proxima_analize = false;
+                }
+
+                Err(_erro) => {
+
+                }
+            }
+        }
+
+        if proxima_analize {
+            match tkz::scan(&entrada) {
                 Ok(resultado) => {
                     entrada.drain(0..resultado.0);
                     println!("Novo token: {}", resultado.1);
