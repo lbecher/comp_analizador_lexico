@@ -7,13 +7,13 @@ Analizador Léxico para disciplina de Compiladores do Curso de Ciência da Compu
 Após acessar a raiz do projeto, execute o comando:
 
 ```
-cargo run --release -- /caminho/para/o/arquivo/de/entrada
+cargo run --release -- /caminho/para/o/arquivo/de/entrada.lia
 ```
 
 Ou, para executar em modo debug, execute o comando:
 
 ```
-cargo run -- /caminho/para/o/arquivo/de/entrada
+cargo run -- /caminho/para/o/arquivo/de/entrada.lia
 ```
 
 ## Sobre os testes disponibilizados
