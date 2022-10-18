@@ -17,7 +17,7 @@ pub fn irrelevantes(entrada: &[u8]) -> Result<usize, String> {
 
 pub fn comentarios_de_linha(entrada: &[u8]) -> Result<usize, String> {
   let simbolos = b"\t 1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
-
+  
   let analizador =
     seq(b"//") + 
     one_of(simbolos.as_ref()).repeat(0..) + 
@@ -49,9 +49,9 @@ pub fn comentarios_de_bloco(entrada: &[u8]) -> Result<usize, String> {
   let simbolos = b"\n\t 1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
   
   let analizador =
-    seq(b"---") +
+    seq(b"!--") +
     one_of(simbolos.as_ref()).repeat(0..) +
-    seq(b"---");
+    seq(b"--!");
 
   match analizador.parse(entrada) {
     Ok(saida) => {

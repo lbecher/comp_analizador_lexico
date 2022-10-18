@@ -11,10 +11,16 @@
     STR: string, "minha string";
 #DATA;
 
+!--
+Um bloco de comentario
+01
+02
+--!
+
 #MAIN:
-    PRINT: "alguma coisa", x_;
+    PRINT: "alguma coisa", x_; // comentario
     SCAN: "alguma coisa", x;
-    SET: x, AND(x, y);
+    SET: x, AND(x, OR(x, y));
     BLOC: OPERACAO;
 #MAIN;
 
